@@ -1,20 +1,143 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Hello World</title>
-    </head>
-    <!-- <script src="assets/v7.0.5-dev-pixi.js"></script> -->
-    <!-- <script src="assets/v7.0.5-pro-pixi.min.js"></script> -->
-    <script src="assets/pixi.js"></script>
-    <body>
-        <script type="text/javascript">
-            let type = "WebGL"
-            if(!PIXI.utils.isWebGLSupported()){
-            type = "canvas"
-            }
 
-            PIXI.utils.sayHello(type)
-        </script>
-    </body>
-</html>
+<head>
+  <script src="https://pixijs.download/release/pixi.min.js"></script>
+  <style>
+      body {
+          background-color: #ccc;
+      }
+  </style>
+</head>
+
+<body>
+  <div id="canvas"></div>
+
+  <div class="operate">
+      <button>开始游戏</button>
+      <button onclick="setBrushColor">切换画笔颜色</button>
+  </div>
+  <script>
+
+      const brushColor = 'black';
+      // Create the application helper and add its render target to the page
+      let app = new PIXI.Application({
+          width: 640,
+          height: 360,
+          backgroundColor: "#fff"
+      });
+      console.log('app', app);
+      app.renderer.view.style.border = '1px solid #000';
+      // app.stage.interactive = true;
+      // app.stage.on('pointerdown', mouseDown);
+      const backCanvas = app.view;
+      document.querySelector("#canvas").appendChild(app.view);
+      // app.
+      // app.on('pointerdown', mouseDown);
+
+      const container = new PIXI.Container();
+      console.log('container', container);
+      app.stage.addChild(container);
+      container.interactive = true;
+        app.stage.addChild(container);
+        // container.on('pointerdown', mouseDown);
+
+        let graphics = null;
+
+      // // Rectangle
+      // graphics.beginFill(0xffffff);
+      // graphics.drawRect(0, 0, 640, 360);
+      // graphics.endFill();
+
+      
+      
+      // function
+      const setBrushColor = () => {
+          brushColor = 'red';
+      };
+      let isPaint = false;
+      // let time1 = null;
+
+      const mouseDown = (event) => {
+        graphics = new PIXI.Graphics();
+        // console.log(1);
+        //   console.log('event', event);
+        let myCanvas = document.getElementById("canvas")
+        const localXY = {
+          x: event.clientX - myCanvas.getBoundingClientRect().left,
+          y: event.clientY - myCanvas.getBoundingClientRect().top
+        }
+        console.log('localXY', 'mouseDown', localXY.x, localXY.y);
+        // graphics.beginFill(0xFF3300);
+        graphics.lineStyle(2, 0x000000, 1);
+        // graphics.beginPath();
+        graphics.moveTo(localXY.x, localXY.y);
+        isPaint = true;
+          // graphics.moveTo(localXY.x, localXY.y);
+      };
+
+      const mouseMove = (event) => {
+        if(!isPaint) return;
+        // console.log(1);
+        //   console.log('event', event);
+        let myCanvas = document.getElementById("canvas")
+        const localXY = {
+          x: event.clientX - myCanvas.getBoundingClientRect().left,
+          y: event.clientY - myCanvas.getBoundingClientRect().top
+        }
+        
+        graphics.lineTo(localXY.x, localXY.y);
+        // graphics.endFill();
+        // container.addChild(graphics);
+        // graphics = new PIXI.Graphics();
+      };
+
+      const mouseUp = (event) => {
+        if(!isPaint) return;
+        graphics.endFill();
+        container.addChild(graphics);
+        graphics = null;
+        isPaint = false;
+        time1 = null;
+      }
+
+      backCanvas.addEventListener("pointerdown", mouseDown);
+      backCanvas.addEventListener("pointermove", mouseMove);
+      backCanvas.addEventListener("pointerup", mouseUp);
+
+
+      // 连续绘制代码
+      // const record = [{"start":[110,47],"end":[111,47],"strokeStyle":"#000"},{"start":[110,47],"end":[112,46],"strokeStyle":"#000"},{"start":[110,47],"end":[112,46],"strokeStyle":"#000"},{"start":[110,47],"end":[114,46],"strokeStyle":"#000"},{"start":[110,47],"end":[116,46],"strokeStyle":"#000"},{"start":[110,47],"end":[120,47],"strokeStyle":"#000"},{"start":[110,47],"end":[126,48],"strokeStyle":"#000"},{"start":[110,47],"end":[132,49],"strokeStyle":"#000"},{"start":[110,47],"end":[140,49],"strokeStyle":"#000"},{"start":[110,47],"end":[148,50],"strokeStyle":"#000"},{"start":[110,47],"end":[157,50],"strokeStyle":"#000"},{"start":[110,47],"end":[166,51],"strokeStyle":"#000"},{"start":[110,47],"end":[177,53],"strokeStyle":"#000"},{"start":[110,47],"end":[186,54],"strokeStyle":"#000"},{"start":[110,47],"end":[195,56],"strokeStyle":"#000"},{"start":[110,47],"end":[203,57],"strokeStyle":"#000"},{"start":[110,47],"end":[209,60],"strokeStyle":"#000"},{"start":[110,47],"end":[216,62],"strokeStyle":"#000"},{"start":[110,47],"end":[220,65],"strokeStyle":"#000"},{"start":[110,47],"end":[228,68],"strokeStyle":"#000"},{"start":[110,47],"end":[234,70],"strokeStyle":"#000"},{"start":[110,47],"end":[238,72],"strokeStyle":"#000"},{"start":[110,47],"end":[243,75],"strokeStyle":"#000"},{"start":[110,47],"end":[245,76],"strokeStyle":"#000"},{"start":[110,47],"end":[247,77],"strokeStyle":"#000"},{"start":[110,47],"end":[248,78],"strokeStyle":"#000"},{"start":[110,47],"end":[248,78],"strokeStyle":"#000"},{"start":[110,47],"end":[249,79],"strokeStyle":"#000"},{"start":[110,47],"end":[250,79],"strokeStyle":"#000"},{"start":[110,47],"end":[250,80],"strokeStyle":"#000"},{"start":[110,47],"end":[251,80],"strokeStyle":"#000"},{"start":[110,47],"end":[252,82],"strokeStyle":"#000"},{"start":[110,47],"end":[252,82],"strokeStyle":"#000"},{"start":[110,47],"end":[252,84],"strokeStyle":"#000"},{"start":[110,47],"end":[252,85],"strokeStyle":"#000"},{"start":[110,47],"end":[252,87],"strokeStyle":"#000"},{"start":[110,47],"end":[252,90],"strokeStyle":"#000"},{"start":[110,47],"end":[252,94],"strokeStyle":"#000"},{"start":[110,47],"end":[251,98],"strokeStyle":"#000"},{"start":[110,47],"end":[250,103],"strokeStyle":"#000"},{"start":[110,47],"end":[248,107],"strokeStyle":"#000"},{"start":[110,47],"end":[246,112],"strokeStyle":"#000"},{"start":[110,47],"end":[244,114],"strokeStyle":"#000"},{"start":[110,47],"end":[243,116],"strokeStyle":"#000"},{"start":[110,47],"end":[240,119],"strokeStyle":"#000"},{"start":[110,47],"end":[236,122],"strokeStyle":"#000"},{"start":[110,47],"end":[232,123],"strokeStyle":"#000"},{"start":[110,47],"end":[228,125],"strokeStyle":"#000"},{"start":[110,47],"end":[224,128],"strokeStyle":"#000"},{"start":[110,47],"end":[219,128],"strokeStyle":"#000"},{"start":[110,47],"end":[214,130],"strokeStyle":"#000"},{"start":[110,47],"end":[208,132],"strokeStyle":"#000"},{"start":[110,47],"end":[201,132],"strokeStyle":"#000"},{"start":[110,47],"end":[194,132],"strokeStyle":"#000"},{"start":[110,47],"end":[186,132],"strokeStyle":"#000"},{"start":[110,47],"end":[178,132],"strokeStyle":"#000"},{"start":[110,47],"end":[168,132],"strokeStyle":"#000"},{"start":[110,47],"end":[159,131],"strokeStyle":"#000"},{"start":[110,47],"end":[150,130],"strokeStyle":"#000"},{"start":[110,47],"end":[142,129],"strokeStyle":"#000"},{"start":[110,47],"end":[134,128],"strokeStyle":"#000"},{"start":[110,47],"end":[130,128],"strokeStyle":"#000"},{"start":[110,47],"end":[128,128],"strokeStyle":"#000"},{"start":[110,47],"end":[127,128],"strokeStyle":"#000"},{"start":[110,47],"end":[126,128],"strokeStyle":"#000"},{"start":[110,47],"end":[125,128],"strokeStyle":"#000"},{"start":[110,47],"end":[125,127],"strokeStyle":"#000"},{"start":[110,47],"end":[124,127],"strokeStyle":"#000"},{"start":[110,47],"end":[124,126],"strokeStyle":"#000"},{"start":[110,47],"end":[124,126],"strokeStyle":"#000"},{"start":[110,47],"end":[123,126],"strokeStyle":"#000"},{"start":[110,47],"end":[122,124],"strokeStyle":"#000"},{"start":[110,47],"end":[122,123],"strokeStyle":"#000"},{"start":[110,47],"end":[121,122],"strokeStyle":"#000"},{"start":[110,47],"end":[120,120],"strokeStyle":"#000"},{"start":[110,47],"end":[120,118],"strokeStyle":"#000"},{"start":[110,47],"end":[120,116],"strokeStyle":"#000"},{"start":[110,47],"end":[120,114],"strokeStyle":"#000"},{"start":[110,47],"end":[120,111],"strokeStyle":"#000"},{"start":[110,47],"end":[123,105],"strokeStyle":"#000"},{"start":[110,47],"end":[131,98],"strokeStyle":"#000"},{"start":[110,47],"end":[140,92],"strokeStyle":"#000"},{"start":[110,47],"end":[156,83],"strokeStyle":"#000"},{"start":[110,47],"end":[176,74],"strokeStyle":"#000"},{"start":[110,47],"end":[190,68],"strokeStyle":"#000"},{"start":[110,47],"end":[204,65],"strokeStyle":"#000"},{"start":[110,47],"end":[216,60],"strokeStyle":"#000"},{"start":[110,47],"end":[227,58],"strokeStyle":"#000"},{"start":[110,47],"end":[236,56],"strokeStyle":"#000"},{"start":[110,47],"end":[248,54],"strokeStyle":"#000"},{"start":[110,47],"end":[260,53],"strokeStyle":"#000"},{"start":[110,47],"end":[270,52],"strokeStyle":"#000"},{"start":[110,47],"end":[284,51],"strokeStyle":"#000"},{"start":[110,47],"end":[294,51],"strokeStyle":"#000"},{"start":[110,47],"end":[302,51],"strokeStyle":"#000"},{"start":[110,47],"end":[308,51],"strokeStyle":"#000"},{"start":[110,47],"end":[312,52],"strokeStyle":"#000"},{"start":[110,47],"end":[316,54],"strokeStyle":"#000"},{"start":[110,47],"end":[317,54],"strokeStyle":"#000"},{"start":[110,47],"end":[318,55],"strokeStyle":"#000"},{"start":[110,47],"end":[320,56],"strokeStyle":"#000"},{"start":[110,47],"end":[321,57],"strokeStyle":"#000"},{"start":[110,47],"end":[322,57],"strokeStyle":"#000"},{"start":[110,47],"end":[322,58],"strokeStyle":"#000"},{"start":[110,47],"end":[323,58],"strokeStyle":"#000"},{"start":[110,47],"end":[324,59],"strokeStyle":"#000"},{"start":[110,47],"end":[324,60],"strokeStyle":"#000"},{"start":[110,47],"end":[324,60],"strokeStyle":"#000"},{"start":[110,47],"end":[324,62],"strokeStyle":"#000"},{"start":[110,47],"end":[324,64],"strokeStyle":"#000"},{"start":[110,47],"end":[325,67],"strokeStyle":"#000"},{"start":[110,47],"end":[325,70],"strokeStyle":"#000"},{"start":[110,47],"end":[325,73],"strokeStyle":"#000"},{"start":[110,47],"end":[325,76],"strokeStyle":"#000"},{"start":[110,47],"end":[325,79],"strokeStyle":"#000"},{"start":[110,47],"end":[324,82],"strokeStyle":"#000"},{"start":[110,47],"end":[322,87],"strokeStyle":"#000"},{"start":[110,47],"end":[320,90],"strokeStyle":"#000"},{"start":[110,47],"end":[316,95],"strokeStyle":"#000"},{"start":[110,47],"end":[314,98],"strokeStyle":"#000"},{"start":[110,47],"end":[310,101],"strokeStyle":"#000"},{"start":[110,47],"end":[306,104],"strokeStyle":"#000"},{"start":[110,47],"end":[302,108],"strokeStyle":"#000"},{"start":[110,47],"end":[296,110],"strokeStyle":"#000"},{"start":[110,47],"end":[289,114],"strokeStyle":"#000"},{"start":[110,47],"end":[280,118],"strokeStyle":"#000"},{"start":[110,47],"end":[271,121],"strokeStyle":"#000"},{"start":[110,47],"end":[261,124],"strokeStyle":"#000"},{"start":[110,47],"end":[250,128],"strokeStyle":"#000"},{"start":[110,47],"end":[242,128],"strokeStyle":"#000"},{"start":[110,47],"end":[234,130],"strokeStyle":"#000"},{"start":[110,47],"end":[228,132],"strokeStyle":"#000"},{"start":[110,47],"end":[219,132],"strokeStyle":"#000"},{"start":[110,47],"end":[211,132],"strokeStyle":"#000"},{"start":[110,47],"end":[203,132],"strokeStyle":"#000"},{"start":[110,47],"end":[194,134],"strokeStyle":"#000"},{"start":[110,47],"end":[188,134],"strokeStyle":"#000"},{"start":[110,47],"end":[182,134],"strokeStyle":"#000"},{"start":[110,47],"end":[180,134],"strokeStyle":"#000"},{"start":[110,47],"end":[178,134],"strokeStyle":"#000"},{"start":[110,47],"end":[176,134],"strokeStyle":"#000"},{"start":[110,47],"end":[175,134],"strokeStyle":"#000"},{"start":[110,47],"end":[174,134],"strokeStyle":"#000"},{"start":[110,47],"end":[174,134],"strokeStyle":"#000"},{"start":[110,47],"end":[172,133],"strokeStyle":"#000"},{"start":[110,47],"end":[171,132],"strokeStyle":"#000"},{"start":[110,47],"end":[170,132],"strokeStyle":"#000"},{"start":[110,47],"end":[166,131],"strokeStyle":"#000"},{"start":[110,47],"end":[162,130],"strokeStyle":"#000"},{"start":[110,47],"end":[157,130],"strokeStyle":"#000"},{"start":[110,47],"end":[148,128],"strokeStyle":"#000"},{"start":[110,47],"end":[142,128],"strokeStyle":"#000"},{"start":[110,47],"end":[135,127],"strokeStyle":"#000"},{"start":[110,47],"end":[128,127],"strokeStyle":"#000"},{"start":[110,47],"end":[124,127],"strokeStyle":"#000"},{"start":[110,47],"end":[119,127],"strokeStyle":"#000"},{"start":[110,47],"end":[114,127],"strokeStyle":"#000"},{"start":[110,47],"end":[110,127],"strokeStyle":"#000"},{"start":[110,47],"end":[108,127],"strokeStyle":"#000"},{"start":[110,47],"end":[104,127],"strokeStyle":"#000"},{"start":[110,47],"end":[100,127],"strokeStyle":"#000"},{"start":[110,47],"end":[98,127],"strokeStyle":"#000"},{"start":[110,47],"end":[96,127],"strokeStyle":"#000"},{"start":[110,47],"end":[94,127],"strokeStyle":"#000"},{"start":[110,47],"end":[91,127],"strokeStyle":"#000"},{"start":[110,47],"end":[89,127],"strokeStyle":"#000"},{"start":[110,47],"end":[86,127],"strokeStyle":"#000"},{"start":[110,47],"end":[83,127],"strokeStyle":"#000"},{"start":[110,47],"end":[81,127],"strokeStyle":"#000"},{"start":[110,47],"end":[77,127],"strokeStyle":"#000"},{"start":[110,47],"end":[75,127],"strokeStyle":"#000"},{"start":[110,47],"end":[72,127],"strokeStyle":"#000"},{"start":[110,47],"end":[70,127],"strokeStyle":"#000"},{"start":[110,47],"end":[69,127],"strokeStyle":"#000"},{"start":[110,47],"end":[68,127],"strokeStyle":"#000"},{"start":[110,47],"end":[66,127],"strokeStyle":"#000"},{"start":[110,47],"end":[66,127],"strokeStyle":"#000"},{"start":[110,47],"end":[65,127],"strokeStyle":"#000"},{"start":[110,47],"end":[64,127],"strokeStyle":"#000"},{"start":[110,47],"end":[64,126],"strokeStyle":"#000"},{"start":[110,47],"end":[64,126],"strokeStyle":"#000"},{"start":[110,47],"end":[62,125],"strokeStyle":"#000"},{"start":[110,47],"end":[62,124],"strokeStyle":"#000"},{"start":[110,47],"end":[61,122],"strokeStyle":"#000"},{"start":[110,47],"end":[60,121],"strokeStyle":"#000"},{"start":[110,47],"end":[60,120],"strokeStyle":"#000"},{"start":[110,47],"end":[60,118],"strokeStyle":"#000"},{"start":[110,47],"end":[60,116],"strokeStyle":"#000"},{"start":[110,47],"end":[59,114],"strokeStyle":"#000"},{"start":[110,47],"end":[59,111],"strokeStyle":"#000"},{"start":[110,47],"end":[59,107],"strokeStyle":"#000"},{"start":[110,47],"end":[59,104],"strokeStyle":"#000"},{"start":[110,47],"end":[59,101],"strokeStyle":"#000"},{"start":[110,47],"end":[59,99],"strokeStyle":"#000"},{"start":[110,47],"end":[59,97],"strokeStyle":"#000"},{"start":[110,47],"end":[59,96],"strokeStyle":"#000"},{"start":[110,47],"end":[59,94],"strokeStyle":"#000"},{"start":[110,47],"end":[59,93],"strokeStyle":"#000"},{"start":[110,47],"end":[60,91],"strokeStyle":"#000"},{"start":[110,47],"end":[60,90],"strokeStyle":"#000"},{"start":[110,47],"end":[61,88],"strokeStyle":"#000"},{"start":[110,47],"end":[62,87],"strokeStyle":"#000"},{"start":[110,47],"end":[62,86],"strokeStyle":"#000"},{"start":[110,47],"end":[63,85],"strokeStyle":"#000"},{"start":[110,47],"end":[64,85],"strokeStyle":"#000"},{"start":[110,47],"end":[64,84],"strokeStyle":"#000"},{"start":[110,47],"end":[64,84],"strokeStyle":"#000"},{"start":[110,47],"end":[64,84],"strokeStyle":"#000"},{"start":[110,47],"end":[65,84],"strokeStyle":"#000"},{"start":[110,47],"end":[66,84],"strokeStyle":"#000"},{"start":[110,47],"end":[67,84],"strokeStyle":"#000"},{"start":[110,47],"end":[68,84],"strokeStyle":"#000"},{"start":[110,47],"end":[70,84],"strokeStyle":"#000"},{"start":[110,47],"end":[72,84],"strokeStyle":"#000"},{"start":[110,47],"end":[75,84],"strokeStyle":"#000"},{"start":[110,47],"end":[78,84],"strokeStyle":"#000"},{"start":[110,47],"end":[81,85],"strokeStyle":"#000"},{"start":[110,47],"end":[83,86],"strokeStyle":"#000"},{"start":[110,47],"end":[86,86],"strokeStyle":"#000"},{"start":[110,47],"end":[89,87],"strokeStyle":"#000"},{"start":[110,47],"end":[92,88],"strokeStyle":"#000"},{"start":[110,47],"end":[97,90],"strokeStyle":"#000"},{"start":[110,47],"end":[102,91],"strokeStyle":"#000"},{"start":[110,47],"end":[107,93],"strokeStyle":"#000"},{"start":[110,47],"end":[113,95],"strokeStyle":"#000"},{"start":[110,47],"end":[120,97],"strokeStyle":"#000"},{"start":[110,47],"end":[127,99],"strokeStyle":"#000"},{"start":[110,47],"end":[136,102],"strokeStyle":"#000"},{"start":[110,47],"end":[142,106],"strokeStyle":"#000"},{"start":[110,47],"end":[154,108],"strokeStyle":"#000"},{"start":[110,47],"end":[163,113],"strokeStyle":"#000"},{"start":[110,47],"end":[174,116],"strokeStyle":"#000"},{"start":[110,47],"end":[184,120],"strokeStyle":"#000"},{"start":[110,47],"end":[195,124],"strokeStyle":"#000"},{"start":[110,47],"end":[202,126],"strokeStyle":"#000"},{"start":[110,47],"end":[212,129],"strokeStyle":"#000"},{"start":[110,47],"end":[218,131],"strokeStyle":"#000"},{"start":[110,47],"end":[224,134],"strokeStyle":"#000"},{"start":[110,47],"end":[229,135],"strokeStyle":"#000"},{"start":[110,47],"end":[234,137],"strokeStyle":"#000"},{"start":[110,47],"end":[239,139],"strokeStyle":"#000"},{"start":[110,47],"end":[244,140],"strokeStyle":"#000"},{"start":[110,47],"end":[249,142],"strokeStyle":"#000"},{"start":[110,47],"end":[254,143],"strokeStyle":"#000"},{"start":[110,47],"end":[257,145],"strokeStyle":"#000"},{"start":[110,47],"end":[260,146],"strokeStyle":"#000"},{"start":[110,47],"end":[262,146],"strokeStyle":"#000"},{"start":[110,47],"end":[264,147],"strokeStyle":"#000"},{"start":[110,47],"end":[266,148],"strokeStyle":"#000"},{"start":[110,47],"end":[266,148],"strokeStyle":"#000"},{"start":[110,47],"end":[268,148],"strokeStyle":"#000"},{"start":[110,47],"end":[268,149],"strokeStyle":"#000"},{"start":[110,47],"end":[269,149],"strokeStyle":"#000"},{"start":[110,47],"end":[270,149],"strokeStyle":"#000"},{"start":[110,47],"end":[270,150],"strokeStyle":"#000"},{"start":[110,47],"end":[273,150],"strokeStyle":"#000"},{"start":[110,47],"end":[275,151],"strokeStyle":"#000"},{"start":[110,47],"end":[278,153],"strokeStyle":"#000"},{"start":[110,47],"end":[281,154],"strokeStyle":"#000"},{"start":[110,47],"end":[284,155],"strokeStyle":"#000"},{"start":[110,47],"end":[288,156],"strokeStyle":"#000"},{"start":[110,47],"end":[290,158],"strokeStyle":"#000"},{"start":[110,47],"end":[292,158],"strokeStyle":"#000"},{"start":[110,47],"end":[294,159],"strokeStyle":"#000"},{"start":[110,47],"end":[296,160],"strokeStyle":"#000"},{"start":[110,47],"end":[297,160],"strokeStyle":"#000"},{"start":[110,47],"end":[298,160],"strokeStyle":"#000"},{"start":[110,47],"end":[299,160],"strokeStyle":"#000"},{"start":[110,47],"end":[300,161],"strokeStyle":"#000"},{"start":[110,47],"end":[301,161],"strokeStyle":"#000"},{"start":[110,47],"end":[302,161],"strokeStyle":"#000"}];
+      // const graphics1 = new PIXI.Graphics();
+      // graphics1.lineStyle(2, 0x000000, 1);
+      // let old = [], strokeStyle = null, setLineWidth = null;
+      // for(let i=0; i<record.length;i++) {
+      //   let item = record[i]
+      //   if(!old || (old[0] !== item.start[0] && old[1] !== item.start[1])) {
+      //     old[0] = item.start[0]
+      //     old[1] = item.start[1]
+      //     // c.beginPath();
+      //     // graphics.beginPath();
+      //     // graphics1.moveTo(localXY.x, localXY.y);
+      //     if(!strokeStyle || (strokeStyle !== item.strokeStyle)){
+      //       strokeStyle = item.strokeStyle
+      //       graphics1.strokeStyle = strokeStyle
+      //     }
+      //     if(!setLineWidth || (setLineWidth !== item.lineWidth)) {
+      //       setLineWidth = item.lineWidth
+      //       graphics1.lineWidth = setLineWidth
+      //     }
+      //     graphics1.moveTo(item.start[0],item.start[1])
+      //   }
+      //   graphics1.lineTo(item.end[0],item.end[1])
+      // }
+      // graphics1.endFill();
+      // container.addChild(graphics1);
+
+      // container.on('pointerdown', mouseDown);
+      // container.on('pointermove', mouseMove);
+      // container.on('pointerup', mouseUp);
+
+  </script>
+</body>
+</html

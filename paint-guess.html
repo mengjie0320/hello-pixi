@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    .canvasBox {
+      display: flex;
+    }
+    button,.button {
+      margin: 12px;
+    }
+    .function {
+      margin: auto 0;
+    }
+    .lineWidth {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .widthPercentage{
+      position: absolute;
+      top: 34px;
+      left: 30%;
+      height: 20px;
+      border: 1px dashed #aaa;
+      display: none;
+      padding: 4px;
+    }
+    .img {
+      top: 0;
+      left: 0;
+      width: 800px;
+      height: 800px;
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .imgbox{
+      width: auto;
+      position: relative;
+    }
+    .canvas {
+      cursor: url('./brush.ico'), auto;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="imgbox">
+    <!-- <img src="./huabu.webp"  id="scream" class="img" alt=""> -->
+    <canvas class="canvas"  id="canvas" width="800" height="800"></canvas>
+  </div>
+  <div class="function">
+    <div></div>
+    <div>
+      <button onclick="start()">清除绘制</button>
+    </div>
+    <div>
+      <button onclick="reset()">回放绘制</button>
+    </div>
+    <div>
+      <input type="radio" name="mode" id="canvasMode" onChange="modeChange(1)"> <label for="canvasMode">画布模式</label>
+      <input type="radio" name="mode" id="backgroundMode" onChange="modeChange(2)"> <label for="backgroundMode">背景颜色模式</label>
+    </div>
+    <div class="button">
+      <input type="color" id="color"> 背景颜色
+    </div>
+    <div class="button">
+      <input type="color" id="fontColor"> 画笔颜色
+    </div>
+    <div class="button lineWidth">
+      <input type="range" value="1" min="1" id="fontWidth"><span style="margin-left:12px;width:95px">画笔粗细：</span>
+      <div class="widthPercentage" id="percentage">
+      </div>
+      <div  class="button">
+        <span id="lineNum">1</span>
+      </div>
+    </div>
+    <div class="button lineWidth">
+      <input type="range" value="15" min="1" id="rubberWidth"><span style="margin-left:12px;width:95px">橡皮大小：</span>
+      <div  class="button">
+        <span id="rubberNum">15</span>
+      </div>
+    </div>
+    <div>
+    <button onclick="eraserClick()" id='eraser'>橡皮擦 </button>
+    </div>
+  </div>
+  </div>
+</body>
+<script>
+  let record = []
+  let bkgColor = document.getElementById('color')
+  let eraser = document.getElementById('eraser')
+  let img = document.getElementById("scream");
+  let fontWidth = document.getElementById('fontWidth')
+  let rubberWidth = document.getElementById('rubberWidth')
+  let lineNum = document.getElementById('lineNum')
+  let rubberNum = document.getElementById('rubberNum')
+  let fontColor = document.getElementById('fontColor')
+  let canvas = document.getElementById('canvas')
+  let percentage = document.getElementById('percentage')
+  let  body = document.document || document.body
+  let clientX,clientY,c,lineWidth,rubberSize,eraserFlag,mode=1,color
+  let flag,fColor='#000'
+  c = canvas.getContext('2d')
+  init()
+  modeChange = function(e) {
+    mode = e
+    init({color})
+    resetHui(false)
+  }
+  eraser.onclick = function() { // 橡皮擦点击事件
+    eraserFlag = !eraserFlag
+    if(eraserFlag) {
+      eraser.innerText='画笔'
+      canvas.style.cursor = "url('./eraser.webp'), auto"
+    } else {
+      eraser.innerText='橡皮擦'
+      canvas.style.cursor = "url('./pen.webp'), auto"
+      c.strokeStyle = fColor
+    }
+    c.beginPath();
+  }
+  bkgColor.onchange = function(e) { // 背景颜色
+    color = e.target.value
+    init({color})
+    resetHui(false)
+  }
+  fontColor.onchange = function(e) { // 画笔颜色
+    fColor = e.target.value
+    c.beginPath();
+    c.strokeStyle = fColor
+  }
+  fontWidth.onchange = function(e) { // 画笔粗细 选择之后
+    lineWidth = e.target.value
+    c.beginPath();
+    c.lineWidth = lineWidth
+  }
+  rubberWidth.onmousemove = function(e) { // 橡皮大小 移动滑块
+    rubberSize = e.target.value
+    percentage.innerText = rubberSize+' %'
+    rubberNum.innerText = rubberSize
+  }
+  fontWidth.onmousemove = function(e) { // 画笔粗细 移动滑块
+    lineWidth = e.target.value
+    percentage.style.display = 'block'
+    percentage.innerText = lineWidth+' %'
+    lineNum.innerText = lineWidth
+  }
+  fontWidth.onmouseleave = function(e) { // 画笔粗细 移除滑块
+    lineWidth = e.target.value
+    percentage.style.display = 'none'
+  }
+  canvas.onmouseenter = function(e) {
+    if(!eraserFlag) return
+    // canvas.style.cursor = 'none'
+  }
+  canvas.onmousedown = function(e) { // 鼠标按下开始画图
+    flag = true
+    if(!eraserFlag) {
+      c.moveTo(e.clientX,e.clientY)
+    }
+    // console.log(e.clientX,e.clientY,'开始');
+    canvas.onmousemove = function(event) { //鼠标按下移动画图
+      if(!flag) return
+      clientX = event.clientX;
+      clientY = event.clientY
+      if(!eraserFlag) {
+        c.lineTo(clientX,clientY)
+        c.stroke();
+        // console.log(clientX,clientY,'结束');
+        // console.log(e.clientX,e.clientY,clientX, clientY, '重回');
+        record.push({
+          start: [e.clientX,e.clientY],
+          end: [clientX, clientY],
+          strokeStyle: fColor,
+          lineWidth: lineWidth
+        })
+      }else {
+        if(mode===1) {
+          c.clearRect(clientX, clientY, rubberSize, rubberSize);
+        } else {
+          c.strokeStyle = color
+          c.fillRect(clientX,clientY,rubberSize,rubberSize);
+        }
+        
+      }
+    }
+  }
+  canvas.onmouseup = function() { // 鼠标松开 结束画图
+    flag = false
+    c.stroke();
+    // console.log(record);
+  }
+  function start(){
+    record = []
+    init()
+    lineNum.innerText = 0
+    fontWidth.value = 0
+  }
+  function reset(){
+    init()
+    resetHui()
+  }
+  async function resetHui(needDelay = true) {
+    let old = []
+    let strokeStyle,setLineWidth
+    console.log('record', JSON.stringify(record));
+    for(let i=0; i<record.length;i++) {
+      let item = record[i]
+      if(!old || (old[0] !== item.start[0] && old[1] !== item.start[1])) {
+        old[0] = item.start[0]
+        old[1] = item.start[1]
+        c.beginPath();
+        if(!strokeStyle || (strokeStyle !== item.strokeStyle)){
+          strokeStyle = item.strokeStyle
+          c.strokeStyle = strokeStyle
+        }
+        if(!setLineWidth || (setLineWidth !== item.lineWidth)) {
+          setLineWidth = item.lineWidth
+          c.lineWidth = setLineWidth
+        }
+        c.moveTo(item.start[0],item.start[1])
+      }
+      c.lineTo(item.end[0],item.end[1])
+      c.stroke();
+      needDelay && await delay()
+    }
+  }
+  function delay(time = 10) {
+    return new Promise((res,rej)=>{
+      setTimeout(function(){
+        res('随便什么数据');
+      }, time);
+    })
+  }
+  function init({color='#fff'}={}) {
+    canvas.width = canvas.width
+    c.strokeStyle = fontColor // 线条颜色
+    c.rect(0,0,800,800); // 矩形
+    c.stroke(); // 线条结束
+    if (mode===1) { // 模式1为画布模式
+      c.fillStyle = 'rgba(255, 255, 255, 0)'
+    } else {
+      c.fillStyle = color; // 填充颜色 背景色
+    }
+    c.fillRect(0,0,800,800); // 填充矩形
+    c.stroke(); // 线条结束
+    c.strokeStyle = '#000' // 线条颜色
+    c.lineWidth = 1 // 线条粗细
+    c.lineCap = 'square'; // 线条头部形状 扁平 凸起 凹进
+  }
+</script>
+</html>

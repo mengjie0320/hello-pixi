@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+</head>
+
+<body>
+    <!-- <div id="canvas"></div> -->
+    <!-- <button>开始游戏</button> -->
+    <script>
+
+const mouseDown = (event) => {
+        console.log(1);
+          console.log('event', event);
+          // graphics.moveTo()
+      };
+        // Create the application helper and add its render target to the page
+        const app = new PIXI.Application({
+            width: 640,
+            height: 360
+        });
+        document.body.appendChild(app.view);
+
+        // Add a container to center our sprite stack on the page
+        const container = new PIXI.Container();
+        container.x = 0;
+        container.y = 0;
+        container.interactive = true;
+        app.stage.addChild(container);
+        container.on('pointerdown', mouseDown);
+
+        const graphics = new PIXI.Graphics();
+
+      // Rectangle
+      graphics.beginFill(0xccc);
+      graphics.drawRect(0, 0, 640, 360);
+      graphics.endFill();
+
+      container.addChild(graphics);
+
+
+        // Create the 3 sprites, each a child of the last
+        // let sprite = PIXI.Sprite.from('./sample.png');
+        // sprite.interactive = true;
+        // sprite.on('pointerdown', mouseDown);
+            // sprite.anchor.set(0.5);
+            // container.addChild(sprite);
+        // sprites.push(sprite);
+        // container = sprite;
+
+        // Set all sprite's properties to the same value, animated over time
+        // let elapsed = 0.0;
+        // app.ticker.add((delta) => {
+        //     elapsed += delta / 60;
+        //     const amount = Math.sin(elapsed);
+        //     const scale = 1.0 + 0.25 * amount;
+        //     const alpha = 0.75 + 0.25 * amount;
+        //     const angle = 40 * amount;
+        //     const x = 75 * amount;
+        //     for (let i = 0; i < sprites.length; i++) {
+        //         const sprite = sprites[i];
+        //         sprite.scale.set(scale);
+        //         sprite.alpha = alpha;
+        //         sprite.angle = angle;
+        //         sprite.x = x;
+        //     }
+        // });
+    </script>
+</body>
+</html
