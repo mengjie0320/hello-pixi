@@ -28,8 +28,11 @@
       });
       console.log('app', app);
       app.renderer.view.style.border = '1px solid #000';
-      // app.stage.interactive = true;
-      // app.stage.on('pointerdown', mouseDown);
+      app.stage.interactive = true;
+      app.stage.on('pointerdown', () => {
+        console.log('111');
+      });
+      
       const backCanvas = app.view;
       document.querySelector("#canvas").appendChild(app.view);
       // app.
