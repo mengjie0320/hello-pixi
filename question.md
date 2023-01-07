@@ -49,6 +49,11 @@ webgl vs opengl
 浏览器的工作原理
 webpack、gulp 打包原理源码：使用上的问题及便利之处
 
+Container   renderCanvas 
+displayObject  的 事件捕捉，可直接调方法，无需on触发吗？wheel 事件？？
+
+画布渲染 ? WebAssembly和二进制blob，WebAssembly一种现代网络浏览器都能理解的低级二进制指令格式，但可读性差。WebAssembly 已被用于运行游戏、解码基因组序列和托管更高级别的框架，如.NET 的 Blazor 环境。WebGpu vs WebGl ?
+
 ### 8、学习其他的拓展资源记载
 
 [用 webgl 打造一款简单第一人称射击游戏](http://www.alloyteam.com/2016/11/with-webgl-to-build-a-simple-first-person-shooter-games/)

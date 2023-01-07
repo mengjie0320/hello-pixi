@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>graphics-验证连续出内容</title>
+    <style>
+        body {
+            background-color: #ccc;
+        }
+    </style>
+    <!-- <script src="/assets/pixi.min.js"></script> -->
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <!-- <script type="module" src="./graphics-frequent.js"></script> -->
+</head>
+
+<body>
+    <div id="canvas"></div>
+
+    <div class="operate">
+        <button>开始游戏</button>
+        <button id="replay">重绘</button>
+        <!-- <button id="replay" onclick="replay">重绘</button> -->
+        <!-- <button onclick="setBrushColor">切换画笔颜色</button> -->
+    </div>
+    <script>
+
+        const brushColor = 'black';
+        let lastPosition = { x: null, y: null}, curPosition = { x: null, y: null};
+        const savePositionList = [];
+        // Create the application helper and add its render target to the page
+        let app = new PIXI.Application({
+            width: 640,
+            height: 360,
+            backgroundColor: "#fff"
+        });
+        console.log('app', app);
+        app.renderer.view.style.border = '1px solid #000';
+        app.stage.interactive = true;
+        app.stage.on('pointerdown', () => {
+            console.log('111');
+        });
+
+        const backCanvas = app.view;
+        document.querySelector("#canvas").appendChild(app.view);
+
+        const container = new PIXI.Container();
+        console.log('container', container);
+        app.stage.addChild(container);
+        container.interactive = true;
+        app.stage.addChild(container);
+        // container.on('pointerdown', mouseDown);
+
+        let graphics = new PIXI.Graphics();
+        container.addChild(graphics);
+
+
+        // function
+        const setBrushColor = () => {
+            brushColor = 'red';
+        };
+        let isPaint = false;
+        // let time1 = null;
+
+        const mouseUp = (event) => {
+            if (!isPaint) return;
+            // graphics.endFill();
+            // graphics.endHole();
+            // graphics = null;
+            isPaint = false;
+            time1 = null;
+            // 重置位置，不用划线
+            lastPosition = { x: null, y: null};
+            curPosition = { x: null, y: null};
+        }
+
+        const mouseMove = (event) => {
+            if (!isPaint) return;
+            // console.log(1);
+            //   console.log('event', event);
+            let myCanvas = document.getElementById("canvas")
+            const localXY = {
+                x: event.clientX - myCanvas.getBoundingClientRect().left,
+                y: event.clientY - myCanvas.getBoundingClientRect().top
+            }
+
+            console.log('mouseMove', 'localXY', localXY.x, localXY.y);
+
+            curPosition.x = localXY.x;
+            curPosition.y = localXY.y;
+            savePositionList.push({ lastPosition: JSON.parse(JSON.stringify(lastPosition)), curPosition: JSON.parse(JSON.stringify(curPosition))});
+            // graphics.lineTo(localXY.x, localXY.y);
+            // graphics.moveTo(localXY.x, localXY.y);
+            if (lastPosition.x && lastPosition.y) {
+                console.log('lastPosition', JSON.stringify(lastPosition));
+                graphics.moveTo(lastPosition.x, lastPosition.y);
+            }
+            if (curPosition.x && curPosition.y) {
+                console.log('curPosition', JSON.stringify(curPosition));
+                graphics.lineTo(curPosition.x, curPosition.y);
+                lastPosition.x = curPosition.x;
+                lastPosition.y = curPosition.y;
+            }
+
+            
+
+            backCanvas.addEventListener("pointerup", mouseUp);
+        };
+
+        const mouseDown = (event) => {
+            // graphics = new PIXI.Graphics();
+            // console.log(1);
+            //   console.log('event', event);
+            let myCanvas = document.getElementById("canvas")
+            const localXY = {
+                x: event.clientX - myCanvas.getBoundingClientRect().left,
+                y: event.clientY - myCanvas.getBoundingClientRect().top
+            }
+            console.log('mouseDown', 'localXY', localXY.x, localXY.y);
+            // graphics.beginFill(0xFF3300);
+            graphics.lineStyle(2, 0x000000, 1); // (width, color, alpha, alignment, native)
+            lastPosition.x = localXY.x;
+            lastPosition.y = localXY.y;
+
+            isPaint = true;
+            // graphics.moveTo(localXY.x, localXY.y);
+
+            backCanvas.addEventListener("pointermove", mouseMove);
+        };
+
+        backCanvas.addEventListener("pointerdown", mouseDown);
+
+        const replay = async (e) => {
+            console.log('replay', JSON.stringify(savePositionList));
+            graphics.clear();
+            graphics.lineStyle(2, 0x000000, 1);
+            for(let i = 0; i < savePositionList.length; i++) {
+                const { lastPosition, curPosition } = savePositionList[i];
+                console.log('replay, lastPosition', JSON.stringify(lastPosition), 'curPosition', JSON.stringify(curPosition));
+                if (lastPosition.x && lastPosition.y) {
+                    graphics.moveTo(lastPosition.x, lastPosition.y);
+                }
+                if (curPosition.x && curPosition.y) {
+                    graphics.lineTo(curPosition.x, curPosition.y);
+                    lastPosition.x = curPosition.x;
+                    lastPosition.y = curPosition.y;
+                }
+                await delay();
+            }
+        };
+        function delay(time = 10) {
+            return new Promise((res,rej)=>{
+                setTimeout(function(){
+                    res('随便什么数据');
+                }, time);
+            })
+        }
+        document.querySelector("#replay").addEventListener('click', replay);
+    </script>
+</body>
+
+</html>
