@@ -11,8 +11,8 @@
             background-color: #ccc;
         }
     </style>
-    <!-- <script src="/assets/pixi.min.js"></script> -->
-    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <script src="/assets/pixi.min.js"></script>
+    <!-- <script src="https://pixijs.download/release/pixi.min.js"></script> -->
     <!-- <script type="module" src="./graphics-frequent.js"></script> -->
 </head>
 
@@ -21,13 +21,30 @@
 
     <div class="operate">
         <button>开始游戏</button>
-        <button id="replay">重绘</button>
-        <!-- <button id="replay" onclick="replay">重绘</button> -->
-        <!-- <button onclick="setBrushColor">切换画笔颜色</button> -->
+        <button onclick="replay()">重绘</button>
+        <div class="brushSize">
+            <!-- <input type="range" value="1" min="1" id="fontWidth" onmousemove="setBrushSize">
+            <span style="margin-left:12px;width:95px">画笔粗细：</span>
+            <div class="widthPercentage" id="percentage"></div>
+            <div class="button">
+                <span id="lineNum">1</span>
+            </div> -->
+            <input type="number" value="1" min="1" id="fontSize" onchange="setBrushSize()">
+            <span style="margin-left:12px;width:95px">画笔粗细：<span id="lineNum">1</span></span>
+
+        </div>
+        <!-- <button onclick="setBrushColor()">切换画笔颜色</button><br/> -->
+        <div class="brushColor">
+            <input type="color" id="fontColor" onchange="setBrushColor()"> 画笔颜色
+        </div>
+        <button id="brushType" onclick="changeBrushType()">橡皮擦</button>
     </div>
     <script>
-
-        const brushColor = 'black';
+        // TODO - mj：操作面板浮动与上方 - 画板盘选择特效
+        let brushColor = '0x000000', lastBrushColor = brushColor; // 画笔颜色：16进制管理，初始黑色
+        let brushSize = 1; // 粗细
+        let brushOpacity = 1; // 透明度
+        let isEarser = false;
         let lastPosition = { x: null, y: null}, curPosition = { x: null, y: null};
         const savePositionList = [];
         // Create the application helper and add its render target to the page
@@ -56,19 +73,11 @@
         let graphics = new PIXI.Graphics();
         container.addChild(graphics);
 
-
-        // function
-        const setBrushColor = () => {
-            brushColor = 'red';
-        };
         let isPaint = false;
         // let time1 = null;
 
         const mouseUp = (event) => {
             if (!isPaint) return;
-            // graphics.endFill();
-            // graphics.endHole();
-            // graphics = null;
             isPaint = false;
             time1 = null;
             // 重置位置，不用划线
@@ -90,7 +99,13 @@
 
             curPosition.x = localXY.x;
             curPosition.y = localXY.y;
-            savePositionList.push({ lastPosition: JSON.parse(JSON.stringify(lastPosition)), curPosition: JSON.parse(JSON.stringify(curPosition))});
+            savePositionList.push({
+                lastPosition: JSON.parse(JSON.stringify(lastPosition)),
+                curPosition: JSON.parse(JSON.stringify(curPosition)),
+                brushColor,
+                brushSize,
+                brushOpacity
+            });
             // graphics.lineTo(localXY.x, localXY.y);
             // graphics.moveTo(localXY.x, localXY.y);
             if (lastPosition.x && lastPosition.y) {
@@ -120,7 +135,7 @@
             }
             console.log('mouseDown', 'localXY', localXY.x, localXY.y);
             // graphics.beginFill(0xFF3300);
-            graphics.lineStyle(2, 0x000000, 1); // (width, color, alpha, alignment, native)
+            graphics.lineStyle(brushSize, brushColor, brushOpacity); // (width, color, alpha, alignment, native)
             lastPosition.x = localXY.x;
             lastPosition.y = localXY.y;
 
@@ -132,13 +147,15 @@
 
         backCanvas.addEventListener("pointerdown", mouseDown);
 
+        // 重绘
         const replay = async (e) => {
-            console.log('replay', JSON.stringify(savePositionList));
+            // console.log('replay', JSON.stringify(savePositionList));
+            console.log('replay 1', 1);
             graphics.clear();
-            graphics.lineStyle(2, 0x000000, 1);
             for(let i = 0; i < savePositionList.length; i++) {
-                const { lastPosition, curPosition } = savePositionList[i];
-                console.log('replay, lastPosition', JSON.stringify(lastPosition), 'curPosition', JSON.stringify(curPosition));
+                const { lastPosition, curPosition, brushColor, brushSize, brushOpacity } = savePositionList[i];
+                graphics.lineStyle(brushSize, brushColor, brushOpacity);
+                // console.log('replay, lastPosition', JSON.stringify(lastPosition), 'curPosition', JSON.stringify(curPosition));
                 if (lastPosition.x && lastPosition.y) {
                     graphics.moveTo(lastPosition.x, lastPosition.y);
                 }
@@ -149,6 +166,8 @@
                 }
                 await delay();
             }
+            // graphics.endFill();
+            // savePositionList = [];
         };
         function delay(time = 10) {
             return new Promise((res,rej)=>{
@@ -157,7 +176,36 @@
                 }, time);
             })
         }
-        document.querySelector("#replay").addEventListener('click', replay);
+        // document.querySelector("#replay").addEventListener('click', replay);
+
+        // 画笔调整
+        const setBrushSize = () => {
+            const fontSize = document.querySelector("#fontSize");
+            // console.log('fontSize', fontSize);
+            if(!fontSize) return;
+            brushSize = Number(fontSize.value);
+            console.log('brushSize', brushSize, typeof brushSize);
+            document.querySelector("#lineNum").innerText = brushSize;
+        };
+        const setBrushColor = () => {
+            const fontColor = document.querySelector("#fontColor");
+            // console.log('fontColor', fontColor);
+            if(!fontColor) return;
+            brushColor = fontColor.value.replace('#', '0x');
+            console.log('brushColor', brushColor);
+        };
+        const changeBrushType = () => {
+            isEarser = !isEarser;
+            if(isEarser){
+                document.querySelector("#brushType").innerText = '画笔';
+                lastBrushColor = brushColor;
+                brushColor = '0xffffff'; // 同背景色相同作为橡皮擦的颜色
+            }else{
+                document.querySelector("#brushType").innerText = '橡皮擦';
+                brushColor = lastBrushColor;
+            }
+        };
+        // 上一步、下一步
     </script>
 </body>
 

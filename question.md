@@ -54,10 +54,39 @@ displayObject  的 事件捕捉，可直接调方法，无需on触发吗？wheel
 
 画布渲染 ? WebAssembly和二进制blob，WebAssembly一种现代网络浏览器都能理解的低级二进制指令格式，但可读性差。WebAssembly 已被用于运行游戏、解码基因组序列和托管更高级别的框架，如.NET 的 Blazor 环境。WebGpu vs WebGl ?
 
-### 8、学习其他的拓展资源记载
+### 8、学习其他的拓展资源记载 - 待看
 
 [用 webgl 打造一款简单第一人称射击游戏](http://www.alloyteam.com/2016/11/with-webgl-to-build-a-simple-first-person-shooter-games/)
 [webgl 中文文档-技术大佬的理解](http://www.hewebgl.com/article/getarticle/58)
 [mdn-webgl](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial)
 [cocos 文档](https://docs.cocos.com/creator/manual/zh/editor/publish/)
 [WebGL 2D 游戏性能优化实践](https://km.woa.com/articles/show/569043)
+
+
+### 9、你画我猜待做事项及任务划分
+#### 9.1、需求对接疑问：
+##### 音视频卡页面的方式以及音视频的数据交互部分确认（？上麦）
+#### 9.2、框架搭建：
+js原生、server（本地nodeserver、线上nginx）、自动更新工具包、ts、pixi包、webpack项目打包、自动部署
+#### 9.3、数据交互：
+画布的节点数据、游戏即时状态及其他属性（如何接收？轮询 vs 推送消息）、游戏参与成员
+#### 9.4、功能点包含
+##### 画布：画画、回显、掉线回显（游戏状态）
+##### 画布控制模块：上一步、下一步、画笔粗细、调色盘、橡皮
+##### 其他：游戏介绍、开始部分、猜编辑面板（浮动上方）、结果展示及反馈部分、超时管理；（多状态管理）
+##### 性能优化：性能工具学习
+##### 9.4.5、榜单、音效？？
+##### 9.4.6、考虑异常情况 - 流程分析图
+#### 待考虑点：
+游戏标题、左下角游戏提示、游戏背景 通用模块组件的原生封装
+
+### 10、需求目标：
+整理前端web性能优化经验文档
+游戏开发心得
+项目主挑的经验思考
+webgl的学习总结
+易混淆概念的梳理
+webAssembly、blob、cocos开始了解
+
+
+<!-- vscode的settings及sinppet的留存同步 -->
