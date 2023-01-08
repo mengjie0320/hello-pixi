@@ -11,8 +11,8 @@
             background-color: #ccc;
         }
     </style>
-    <script src="/assets/pixi.min.js"></script>
-    <!-- <script src="https://pixijs.download/release/pixi.min.js"></script> -->
+    <!-- <script src="/assets/pixi.min.js"></script> -->
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
     <!-- <script type="module" src="./graphics-frequent.js"></script> -->
 </head>
 
@@ -51,7 +51,12 @@
         let app = new PIXI.Application({
             width: 640,
             height: 360,
-            backgroundColor: "#fff"
+            backgroundColor: "#fff",
+            // TODO - mj：消除锯齿未生效
+            antialias: true,     // 消除锯齿
+            transparent: false,  // 背景不透明
+            // resolution: resolution,       // 像素设置  模糊的处理
+            autoDensity: true // 这属性很关键 模糊的处理
         });
         console.log('app', app);
         app.renderer.view.style.border = '1px solid #000';

@@ -61,6 +61,8 @@ displayObject  的 事件捕捉，可直接调方法，无需on触发吗？wheel
 [mdn-webgl](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial)
 [cocos 文档](https://docs.cocos.com/creator/manual/zh/editor/publish/)
 [WebGL 2D 游戏性能优化实践](https://km.woa.com/articles/show/569043)
+[pixi开发文档集](https://segmentfault.com/blog/pixijs)
+[原生 js 实现一个前端路由 router](https://cloud.tencent.com/developer/article/1538016)
 
 
 ### 9、你画我猜待做事项及任务划分
@@ -69,7 +71,7 @@ displayObject  的 事件捕捉，可直接调方法，无需on触发吗？wheel
 #### 9.2、框架搭建：
 js原生、server（本地nodeserver、线上nginx）、自动更新工具包、ts、pixi包、webpack项目打包、自动部署
 #### 9.3、数据交互：
-画布的节点数据、游戏即时状态及其他属性（如何接收？轮询 vs 推送消息）、游戏参与成员
+画布的节点数据、游戏即时状态及其他属性（如何接收？轮询 vs 推送消息 ？websocket通讯 ）、游戏参与成员
 #### 9.4、功能点包含
 ##### 画布：画画、回显、掉线回显（游戏状态）
 ##### 画布控制模块：上一步、下一步、画笔粗细、调色盘、橡皮
