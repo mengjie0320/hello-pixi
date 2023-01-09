@@ -109,7 +109,7 @@
   let  body = document.document || document.body
   let clientX,clientY,c,lineWidth,rubberSize,eraserFlag,mode=1,color
   let flag,fColor='#000'
-  c = canvas.getContext('2d')
+  c = canvas.getContext('2d', { antialias: true })
   init()
   modeChange = function(e) {
     mode = e
@@ -256,6 +256,16 @@
     c.strokeStyle = '#000' // 线条颜色
     c.lineWidth = 1 // 线条粗细
     c.lineCap = 'square'; // 线条头部形状 扁平 凸起 凹进
+
+    const width = canvas.width;
+    const height = canvas.height;
+    if (window.devicePixelRatio) {
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        canvas.height = height * window.devicePixelRatio;
+        canvas.width = width * window.devicePixelRatio;
+        c.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
   }
 </script>
 </html>
