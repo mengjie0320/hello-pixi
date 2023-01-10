@@ -47,8 +47,9 @@
             width: canvasWidth,
             height: canvasHeight,
             backgroundColor: "#fff",
-            antialias: true,     // 设置抗锯齿
-            resolution: 1.5,       // 像素设置  模糊的处理
+            antialias: true,     // 消除锯齿
+            transparent: false,  // 背景不透明
+            resolution: 10,       // 像素设置  模糊的处理
             autoDensity: true // 这属性很关键 模糊的处理
         });
         // console.log('app', app);
@@ -121,19 +122,24 @@
                 brushSize,
                 brushOpacity
             });
-            // graphics.lineTo(localXY.x, localXY.y);
-            // graphics.moveTo(localXY.x, localXY.y);
+
             if (lastPosition.x && lastPosition.y) {
                 console.log('lastPosition', JSON.stringify(lastPosition));
                 graphics.moveTo(lastPosition.x, lastPosition.y);
             }
             if (curPosition.x && curPosition.y) {
                 console.log('curPosition', JSON.stringify(curPosition));
-                graphics.drawCircle(curPosition.x, curPosition.y, 0.5); // TODO-mj work - 但是会慢一些跟着
                 graphics.lineTo(curPosition.x, curPosition.y);
                 lastPosition.x = curPosition.x;
                 lastPosition.y = curPosition.y;
             }
+
+            // if(lastPosition.x && lastPosition.y && curPosition.x && curPosition.y) {
+            //   graphics.moveTo(lastPosition.x, lastPosition.y);
+            //   graphics.quadraticCurveTo((lastPosition.x + curPosition.x)/2, (lastPosition.y + curPosition.y)/2,curPosition.x, curPosition.y);
+            //   lastPosition.x = curPosition.x;
+            //   lastPosition.y = curPosition.y;
+            // }
 
             
 
@@ -176,7 +182,6 @@
                     graphics.moveTo(lastPosition.x, lastPosition.y);
                 }
                 if (curPosition.x && curPosition.y) {
-                    graphics.drawCircle(curPosition.x, curPosition.y, 0.5);
                     graphics.lineTo(curPosition.x, curPosition.y);
                     lastPosition.x = curPosition.x;
                     lastPosition.y = curPosition.y;

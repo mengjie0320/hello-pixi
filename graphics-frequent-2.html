@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>graphics-app.ticker连续出内容</title>
+    <title>graphics-app.ticker+消除锯齿参数+半圆补充</title>
     <style>
         body {
             background-color: #ccc;
@@ -36,7 +36,11 @@
         let app = new PIXI.Application({
             width: 640,
             height: 360,
-            backgroundColor: "#fff"
+            backgroundColor: "#fff",
+            antialias: true,     // 消除锯齿
+            transparent: false,  // 背景不透明
+            resolution: 1.5,       // 像素设置  模糊的处理
+            autoDensity: true // 这属性很关键 模糊的处理
         });
         console.log('app', app);
         app.renderer.view.style.border = '1px solid #000';
@@ -141,6 +145,7 @@
             }
             if (curPosition.x && curPosition.y) {
                 console.log('curPosition', JSON.stringify(curPosition));
+                graphics.drawCircle(curPosition.x, curPosition.y, 0.5); // 补充半圆
                 graphics.lineTo(curPosition.x, curPosition.y);
                 lastPosition.x = curPosition.x;
                 lastPosition.y = curPosition.y;

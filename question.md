@@ -64,6 +64,10 @@ displayObject  的 事件捕捉，可直接调方法，无需on触发吗？wheel
 [pixi开发文档集](https://segmentfault.com/blog/pixijs)
 [原生 js 实现一个前端路由 router](https://cloud.tencent.com/developer/article/1538016)
 
+#### 已学习文档：
+##### 锯齿问题：done
+[canvas移动端画图出现锯齿如何解决](https://juejin.cn/post/7031001865479258120)
+[关于pixi.js在PIXI.ticker内调用lineTo无法连续画线的问题](https://www.proyy.com/6977220003233792008.html)
 
 ### 9、你画我猜待做事项及任务划分
 #### 9.1、需求对接疑问：

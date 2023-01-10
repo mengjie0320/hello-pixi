@@ -3,19 +3,7 @@
 1、搭建项目问题及暴露
 2、项目状态 - 结构图分析、异常结构分析
 3、阅读文档：源码、图形学文档、其他人游戏方案
-4、解决 锯齿不顺滑问题；非第二次重绘会卡顿
-[关于pixi.js在PIXI.ticker内调用lineTo无法连续画线的问题](https://www.proyy.com/6977220003233792008.html)
-```
-// 1、ticker实现动画效果
-ticker.add(() => {
-    Graphics.clear()
-    Graphics.drawNew()
-})
 
-// 2、画个半圆
-Graphics.drawCircle(toPos.x, toPos.y, 0.5);
-```
-[消除高分辨率屏幕下webgl canvas产生的锯齿](https://blog.51cto.com/u_15127669/3936618) 消除分辨率比
 
 # 2023-01-07
 进展：
@@ -52,3 +40,35 @@ module vs commonjs?
 1、webpack打包后html中调不到外部js中定义的方法：定义到windowq全局上、document监听
 2、是否考虑使用jquery包，大小等考虑
 3、路由 - 自定义路由工具、页面模块化显示方案
+
+# 2023-01-10
+## 1、解决 锯齿不顺滑问题；非第二次重绘会卡顿
+[关于pixi.js在PIXI.ticker内调用lineTo无法连续画线的问题](https://www.proyy.com/6977220003233792008.html)
+```
+// 1、ticker实现动画效果 
+ticker.add(() => {
+  Graphics.clear() // 不能清除啊，就白做了
+  Graphics.drawNew() // 2年前的文档了，该函数在当前版本不存在
+})
+
+// 2、画个半圆  - work
+Graphics.drawCircle(toPos.x, toPos.y, 0.5);
+```
+
+## 2、尝试cocos画一画
+
+## 3、了解pixi的源码 - 清楚有效失效的原因
+new PIXI.Application    resolution    app.view设置宽高 分辨率
+
+## 4、手势识别的项目了解
+https://github.com/PaddlePaddle/FastDeploy/blob/develop/examples/application/js/web_demo/README_CN.md
+__仍待完善__
+
+# 2023-01-11
+读pixi源码，总结graphic及其基础的对象的工作方式及作用
+
+读cocos文档
+
+读vue原理文档
+
+# 2023-01-12
